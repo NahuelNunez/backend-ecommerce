@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs'
 import {User} from '../models/User'
 export const login = async(req:Request,res:Response,) => {
     try {
+
+
         const {email,password} = req.body;
      if(!email || !password) {
         res.status(400).json({error:"Email y contraseña son requeridos"});
@@ -17,14 +19,15 @@ export const login = async(req:Request,res:Response,) => {
      
      const isMatch = await bcrypt.compare(password,user!.password);
      if (!isMatch) {
-        res.status(401).json({error:"Credenciales incorrectas boludoo"});
+        res.status(401).json({error:"Credenciales incorrectas"});
         return;
      }
      const token = jwt.sign({
         id: user!.id , email: user!.email , rol: user!.rol
      }, process.env.JWT_SECRET as string,{expiresIn : "1h"})
 
-    res.json({message:'Login exitoso',token})
+    res.json({message:'Login exitoso',token,name:user.nombre,rol:user.rol
+    })
     } catch (error) {
         console.error('Error en el servidor',error)
         res.status(500).json({error:"Error en el servidor"})

@@ -14,7 +14,13 @@ export const getAll = async (req:Request,res:Response) => {
 }
 
 export const Create = async(req:Request,res:Response) => {
+
     try {
+
+  
+    
+  
+
     const {title,image,price,stock,category} = req.body
     const imagePath = req.file?.filename;
 
@@ -42,10 +48,17 @@ export const Create = async(req:Request,res:Response) => {
 }
 
 export const edit = async(req:Request,res:Response) => { 
+ 
 
     try{
+      
+    
+     
+
+
     const {id} = req.params
-    const {title,image,price,stock,category} = req.body 
+    const {title,price,stock,category} = req.body 
+    const image = req.file?.filename 
      const products = await Product.findOne({id:id})
 
       if(products) {
@@ -53,7 +66,12 @@ export const edit = async(req:Request,res:Response) => {
         products.category = category || products.category ,
         products.image = image || products.image ,
         products.price = price || products.price ,
-        products.stock = stock || products.stock ,
+        products.stock = stock || products.stock 
+
+         if (image) {
+                products.image = `${image}`;
+            }
+
         await products.save();
         res.status(201).json({message:'Producto editado correctamente',update:products})
       } else { 
@@ -68,7 +86,11 @@ export const edit = async(req:Request,res:Response) => {
 }
 
 export const eliminate = async(req:Request, res:Response) => {
-    try{
+ 
+    try {
+   
+
+
 
         const {id} = req.params
         
