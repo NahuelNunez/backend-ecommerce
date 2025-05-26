@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { User } from "../models/User";
+
+
 
 export const authenticateToken = (
   req: Request,
@@ -17,7 +18,8 @@ export const authenticateToken = (
 
   try {
     // Verifica si el token es válido
-    jwt.verify(token, process.env.JWT_SECRET as string);
+   const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {id:string}
+   (req as any ).userId = decoded.id
     next(); // Permitir acceso a la ruta
   } catch (err) {
      res.status(403).json({ error: "Token inválido o expirado" });

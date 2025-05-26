@@ -5,6 +5,8 @@ import { upload } from '../middlewares/upload';
 import { authenticateToken } from '../middlewares/auth';
 router.get('/getAll',productController.getAll)
 
+router.get('/getAll/:id',productController.getById)
+
 router.post('/create',authenticateToken,upload.single('image'),productController.Create)
 
 router.put('/edite/:id',authenticateToken,upload.single('image'),productController.edit)

@@ -1,11 +1,18 @@
 import {Request,response,Response} from 'express'
 import { CartItem } from '../models/CartItem'
+import mongoose from 'mongoose';
 
 
 export const getAll = async(req:Request,res:Response) => {
 try {
-  const cartItems = await CartItem.find()
-  res.json(cartItems)
+  const sessionId = req.cookies.sessionId;
+  const userId = (req as any).userId || null;
+
+  const filter = userId 
+  ? {userId: new mongoose.Types.ObjectId(userId)}
+  : {sessionId}
+  const cartItems = await CartItem.find(filter).populate("productId")
+  res.status(200).json(cartItems)
 } catch (error) {
     console.error('Error al obtener los productos del carrito',error)
     res.status(500).json({error:'Error al obtener los productos del carrito'})
@@ -60,7 +67,7 @@ export const eliminateId = async (req:Request,res:Response) => {
     try {
       const { id } = req.params
       if(!id) {
-        return res.status(400).json({error:'Id del elemento del carrito no proporcionado'})
+         res.status(400).json({error:'Id del elemento del carrito no proporcionado'})
       }
       
       const deletedItem = await CartItem.findByIdAndDelete(id)

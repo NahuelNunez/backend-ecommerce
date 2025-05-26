@@ -13,6 +13,20 @@ export const getAll = async (req:Request,res:Response) => {
       }
 }
 
+export const getById = async (req:Request,res:Response) => {
+  try {
+     const {id} = req.params
+
+     const products = await Product.findOne({id})
+
+     res.json(products)
+  } catch(error) { 
+    console.error('Error al obtener el producto',error)
+    res.status(500).json({error:'Error al obtener el producto'})
+
+  }
+}
+
 export const Create = async(req:Request,res:Response) => {
 
     try {
