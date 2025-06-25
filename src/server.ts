@@ -2,9 +2,10 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import productRoutes from './routes/productRoutes'
-import CartItemRoutes from './routes/CartItemRoutes'
+
 import userRoutes from './routes/userRoutes'
 import authRoutes from './routes/authRoutes'
+import orderRoutes from './routes/orderRoutes'
 
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -52,7 +53,8 @@ app.listen(PORT, () => {
 
   app.use('/user',userRoutes)
   app.use('/auth',authRoutes)
-  app.use('/carrito',CartItemRoutes)
+  app.use('/order',orderRoutes)
+  
   
   app.get("/", (req,res) => {
     res.send("¡Servidor con TypeScript y Express funcionando!");

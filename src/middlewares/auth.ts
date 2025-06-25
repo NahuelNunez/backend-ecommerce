@@ -18,7 +18,7 @@ export const authenticateToken = (
 
   try {
     // Verifica si el token es válido
-   const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {id:string}
+   const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {id:number}
    (req as any ).userId = decoded.id
     next(); // Permitir acceso a la ruta
   } catch (err) {
