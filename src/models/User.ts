@@ -11,9 +11,10 @@ const userSchema = new Schema({
     rol:{type:String ,
         lowercase:true,
         default:"usuario",
-        enum:["admin","usuario"]
+        enum:["admin","usuario","superadmin"]
 
-     }
+     },
+     inhabilitado:{type:Boolean, default:false }
 },{
     timestamps:true
 })

@@ -1,6 +1,7 @@
 
 import {Request,Response} from 'express'
 import {Product} from '../models/Product'
+import { createProductLog } from '../utils/logActionAdmin'
 
 export const getAll = async (req:Request,res:Response) => {
     try {
@@ -48,8 +49,12 @@ export const Create = async(req:Request,res:Response) => {
         price,
         stock
     })
-
+  
     await products.save()
+     if ((req as any).userId) {
+      await createProductLog((req as any).userId, "CREATE_PRODUCT", products.id, products.title)
+    }
+    
     res.status(201).json({message:'Producto creado exitosamente',productos:products })
 
 
@@ -87,6 +92,10 @@ export const edit = async(req:Request,res:Response) => {
             }
 
         await products.save();
+
+        if ((req as any).userId) {
+      await createProductLog((req as any).userId, "UPDATE_PRODUCT", products.id, products.title)
+    }
         res.status(201).json({message:'Producto editado correctamente',update:products})
       } else { 
         res.status(404).json({error: 'Producto no encontrado'})
@@ -108,12 +117,18 @@ export const eliminate = async(req:Request, res:Response) => {
 
         const {id} = req.params
         
-        const products = await Product.findOneAndDelete({id:id})
+        const products = await Product.findOne({id:id})
  
         if (!products) {
       res.status(404).json({error:'Producto no encontrado'})
-
+         return;
         }
+
+        if ((req as any).userId) {
+      await createProductLog((req as any).userId, "DELETE_PRODUCT", products.id, products.title)
+    }
+
+       await Product.findOneAndDelete({ id: Number(id) })
 
         res.status(200).json({message:'Producto eliminado exitosamente',producto:products})
 

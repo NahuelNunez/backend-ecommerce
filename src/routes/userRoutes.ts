@@ -9,6 +9,12 @@ router.post('/create',userController.create)
 
 router.delete('/delete/:id',authenticateToken,userController.destroyer)
 
+router.put('/edit/:id',authenticateToken , userController.edit)
+
+router.patch('/habilitarAdmin/:id',authenticateToken,userController.habilitarAdmin)
+
+router.patch('/inhabilitarAdmin/:id',authenticateToken,userController.inhabilitarAdmin)
+
 
 
 export default router;

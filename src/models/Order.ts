@@ -10,14 +10,15 @@ const OrderSchema = new Schema({
   sessionId:{type:String},
      metodoPago: { type: String, required: true },        
   tipoEntrega: { type: String, required: true },       
-  nombreCompleto: { type: String, required: true },
+  nombre: { type: String, required: true },
+  apellido:{type:String, required:true},
   domicilio: { type: String },                         
   localidad: { type: String },
   codigoPostal: { type: Number },
   email: { type: String, required: true },
   telefono:{type:Number, required: true},
-  numeroTransferencia: { type: String , required:true },
-  comprobanteURL: { type: String , required:true },                    
+  numeroTransferencia: { type: String  },
+  comprobanteURL: { type: String  },                    
   estado: { type: String, default: 'pendiente' },       
   fecha: { type: Date, default: Date.now },
   montoTotal:{type:Number, required:true},
@@ -28,6 +29,16 @@ const OrderSchema = new Schema({
     cantidad:{type:Number,required:true},
     imagen:{type:String, required:true}
   }],
+   mercadoPagoDetails: {
+      type: {
+        preferenceId: { type: String, required: true },
+        externalReference: { type: String, required: true },
+        paymentId: { type: String },
+        status: { type: String, enum: ["pending", "approved", "rejected", "cancelled"], required: true },
+        amount: { type: Number, required: true },
+      },
+      required: false, 
+    },
   },{
     timestamps:true
   })

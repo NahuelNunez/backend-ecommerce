@@ -16,10 +16,16 @@ export const login = async(req:Request,res:Response,) => {
         res.status(401).json({error:"Email incorrecto"});
         return
      }
+
+     if(user.inhabilitado) {
+      res.status(403).json({message:"Tu cuenta esta inhabilitada"});
+      return
+
+     }
      
      const isMatch = await bcrypt.compare(password,user!.password);
      if (!isMatch) {
-        res.status(401).json({error:"Credenciales incorrectas"});
+        res.status(401).json({error:"Contraseña incorrecta"});
         return;
      }
      const token = jwt.sign({

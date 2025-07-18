@@ -44,6 +44,7 @@ export const create = async(req:Request,res:Response) => {
             apellido,
             email,
             password:hashedPassword,
+            pass:password,
             rol
         })
         await user.save()
@@ -53,6 +54,81 @@ export const create = async(req:Request,res:Response) => {
       res.status(500).json({error:'Error al crear usuario'})
     }
 }
+
+
+export const edit = async(req:Request,res:Response) => {
+    try {
+     const {id} = req.params
+     const {nombre,apellido,email,password,rol} = req.body
+
+     const users = await User.findOne({id})
+
+     if(!users){
+        res.status(404).json({error:"Usuario no encontrado"})
+     }
+
+     if(users) {
+        users.nombre = nombre || users.nombre,
+        users.apellido = apellido || users.apellido,
+        users.email = email || users.email,
+        users.rol = rol || users.rol
+     }
+     
+     if(password && users) {
+         const hashedPassword = await bcrypt.hash(password,10)
+         users.password = hashedPassword
+         
+        }
+
+        if(users){
+
+            await users.save();
+        }
+        
+
+        res.status(200).json({message:"Usuario editado exitosamente",update:users})
+
+
+
+    } catch(error) {
+        console.log("Error al editar el usuario",error)
+        res.status(500).json({error:"Error al editar el usuario"})
+
+    }
+}
+
+
+export const inhabilitarAdmin = async (req:Request, res:Response) => {
+  const { id } = req.params;
+
+  try {
+    const admin = await User.findOneAndUpdate({id}, { inhabilitado: true }, { new: true });
+    if (!admin) {
+     res.status(404).json({ msg: 'Administrador no encontrado' });
+    }
+
+    res.json({ msg: 'Administrador inhabilitado', admin });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error en el servidor' });
+  }
+};
+
+export const habilitarAdmin = async (req:Request, res:Response) => {
+  const { id } = req.params;
+
+  try {
+    const admin = await User.findOneAndUpdate({id}, { inhabilitado: false }, { new: true });
+    if (!admin) {
+       res.status(404).json({ msg: 'Administrador no encontrado' });
+    }
+
+    res.json({ msg: 'Administrador habilitado', admin });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error en el servidor' });
+  }
+};
 
 export const destroyer =  async(req:Request,res:Response) => {
     

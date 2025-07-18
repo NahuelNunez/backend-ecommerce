@@ -26,7 +26,7 @@ const htmlResumen = `
         <tr>
           <td align="center">
             <h2 style="color:#333;">✅ ¡Tu pedido fue confirmado!</h2>
-            <p style="color:#555;">Hola, ${order.nombreCompleto}, gracias por tu compra.</p>
+            <p style="color:#555;">Hola, ${order.nombre} ${order.apellido}, gracias por tu compra.</p>
           </td>
         </tr>
 
@@ -50,7 +50,7 @@ const htmlResumen = `
         <tr>
           <td>
             <h3>Total: $${order.montoTotal}</h3>
-            <p>Método de pago: ${order.metodoPago}</p>
+            <p>Método de pago: ${order.metodoPago === "mercadoPago-basic" || order.metodoPago === "tarjeta" ?  "Billetera MercadoPago" : "Transferencia" }</p>
             <p>Tipo de entrega: ${order.tipoEntrega}</p>
           </td>
         </tr>

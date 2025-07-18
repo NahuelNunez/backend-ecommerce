@@ -2,10 +2,14 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import productRoutes from './routes/productRoutes'
-
+import logRoutes from './routes/logRoutes'
 import userRoutes from './routes/userRoutes'
 import authRoutes from './routes/authRoutes'
 import orderRoutes from './routes/orderRoutes'
+import categoryRoutes from './routes/categoryRoutes'
+import paymentRoutes from './routes/paymentRoutes'
+import webhookRoutes from './routes/webhookRoutes'
+
 
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -24,6 +28,7 @@ app.use(cors({
   credentials:true
 }))
 
+
 app.get('/api/session',(req,res) => {
   let sessionId = req.cookies.sessionId;
  if(!sessionId) {
@@ -40,7 +45,7 @@ app.get('/api/session',(req,res) => {
 })
 
 
-mongoose.connect(process.env.MONGO_URI || '')
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mercadopago-app')
 .then (() => console.log('✅ Conectado a MongoDB Atlas'))
 .catch((err) => console.error('❌ Error de conexión:', err))
 
@@ -48,13 +53,25 @@ app.listen(PORT, () => {
     console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
   });
   
+ 
+
   app.use('/products',productRoutes)
   app.use('/uploads', express.static('uploads'));
 
   app.use('/user',userRoutes)
   app.use('/auth',authRoutes)
   app.use('/order',orderRoutes)
+  app.use('/category',categoryRoutes)
+  app.use("/logs", logRoutes)
+
   
+app.use("/payment", paymentRoutes)
+app.use("/webhooks", webhookRoutes)
+
+// Ruta de prueba
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() })
+})
   
   app.get("/", (req,res) => {
     res.send("¡Servidor con TypeScript y Express funcionando!");
