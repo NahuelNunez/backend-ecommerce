@@ -39,7 +39,7 @@ export const Create = async (req: Request, res: Response) => {
     }
 
     let mercadoPagoDetails = undefined
-    let orderEstado = "pendiente" // Estado por defecto
+    let orderEstado = "No realizada" // Estado por defecto
 
     // Lógica específica para MercadoPago
     if (metodoPago === "mercadoPago-basic" || metodoPago === "tarjeta") {
@@ -62,14 +62,14 @@ export const Create = async (req: Request, res: Response) => {
         status: payment.status, // Estado del pago en MP
         amount: payment.amount,
       }
-
-      // Si el pago de MP ya está aprobado, la orden puede ir a 'procesando'
+      
+      // Si el pago de MP ya está aprobado, la orden puede ir a 'aprobado'
       if (payment.status === "approved") {
-        orderEstado = "procesando"
+        orderEstado = "aprobado"
       } else if (payment.status === "pending") {
         orderEstado = "pendiente" // O 'esperando_pago'
       } else {
-        orderEstado = "cancelada" // O 'rechazada'
+        orderEstado = "rechazada" // O 'rechazada'
       }
     } else if (metodoPago === "transferencia") {
       // Lógica para transferencia bancaria
@@ -107,7 +107,12 @@ export const Create = async (req: Request, res: Response) => {
     })
 
     await newOrder.save()
-    await sendOrderEmail(newOrder) // Envía el email de la orden
+
+    if (orderEstado === "aprobado") {
+
+      await sendOrderEmail(newOrder) // Envía el email de la orden
+      
+    }
 
     res.status(201).json({
       message: "Orden creada",
@@ -172,5 +177,21 @@ export const getByuserTokenWithID = async (req: Request, res: Response) => {
   } catch (error) {
     console.log("Error al obtener las ordenes por sessionId", error)
     res.status(500).json({ error: "Error al obtener las ordenes" })
+  }
+}
+export const getOrderByExternalReference = async (req:Request,res:Response) => {
+  try {
+    const {externalReference} = req.params;
+
+    const order = await Order.findOne({"mercadoPagoDetails.externalReference":externalReference})
+     if(!order) {
+      res.status(404).json({message:"Orden no encontrada para este externalReference"});
+      return;
+     }
+      res.status(200).json(order)
+  } catch (error) {
+    console.error("Error al buscar la orden por externalReference", error);
+    res.status(500).json({message:"Error intenro del servidor"});
+
   }
 }

@@ -19,7 +19,7 @@ const OrderSchema = new Schema({
   telefono:{type:Number, required: true},
   numeroTransferencia: { type: String  },
   comprobanteURL: { type: String  },                    
-  estado: { type: String, default: 'pendiente' },       
+  estado: { type: String, default: 'No realizada' },       
   fecha: { type: Date, default: Date.now },
   montoTotal:{type:Number, required:true},
   productos:[{

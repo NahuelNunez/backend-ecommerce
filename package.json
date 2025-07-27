@@ -14,7 +14,6 @@
   "license": "ISC",
   "dependencies": {
     "@types/bcryptjs": "^3.0.0",
-    "@types/mercadopago": "^1.5.11",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

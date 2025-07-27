@@ -10,9 +10,9 @@ export class PaymentController {
 
   createPayment = async (req: Request, res: Response) => {
     try {
-      const { items } = req.body
+      const { items ,formdata , userEmail , userId } = req.body
       const sessionId = req.cookies.sessionId
-      const userId = req.body.userId // Opcional si tienes auth
+   
 
       // Validación básica
       if (!items || items.length === 0) {
@@ -53,7 +53,9 @@ export class PaymentController {
       const result = await this.paymentService.createPaymentPreference({
         items,
         userId,
+        userEmail,
         sessionId,
+   formdata,
       })
 
       res.status(201).json({
@@ -143,6 +145,8 @@ export class PaymentController {
   handleSuccess = async (req: Request, res: Response) => {
     try {
       const { external_reference, payment_id } = req.query
+
+   
 
       if (external_reference && payment_id) {
         await this.paymentService.updatePaymentStatus(external_reference as string, "approved", payment_id as string)

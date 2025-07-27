@@ -10,5 +10,6 @@ router.get('/getall',orderController.getAll)
 router.delete('/eliminate/:id',orderController.eliminate)
 
 router.get('/sessionId/:id/:sessionId',orderController.getBySessionIdByID)
+router.get("/byRef/:externalReference",orderController.getOrderByExternalReference)
 
 export default router

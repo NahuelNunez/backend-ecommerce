@@ -2,6 +2,16 @@
 import mongoose, {Schema,model} from "mongoose";
 
 const PaymentSchema = new Schema({
+    userId:{
+        type:String
+    },
+    userEmail:{
+        type:String
+    },
+    sessionId:{
+        type:String
+    },
+
     preferenceId:{
         type:String,
         required:true,
@@ -25,8 +35,29 @@ const PaymentSchema = new Schema({
         type:String,
         default:null,
     },
+    items:[
+        {
+            productId:String,
+            title:String,
+            quantity:Number,
+            unit_price:Number,
+            
+
+        }
+    ],
+    userData:{
+        metodoPago:String,
+          tipoEntrega: String,
+  nombre: String,
+  apellido:String,
+  domicilio: String,
+  localidad: String,
+  codigoPostal: String,
+  telefono: String,
+  email: String,
+    }
 }, {
     timestamps:true,
 })
 
-export const Payment = model('Payment',PaymentSchema)
+export const bdPayment = model('Payment',PaymentSchema)
