@@ -65,6 +65,7 @@ console.log("Ya existe order?", existingOrder)
         mercadoPagoDetails:mercadoPagoDetails,
         metodoPago: payment.userData?.metodoPago,
         tipoEntrega:payment.userData?.tipoEntrega,
+        codigoPostal:payment.userData?.codigoPostal,
         nombre:payment.userData?.nombre,
         apellido:payment.userData?.apellido,
         domicilio:payment.userData?.domicilio,
