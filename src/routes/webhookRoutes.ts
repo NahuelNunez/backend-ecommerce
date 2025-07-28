@@ -41,7 +41,11 @@ router.post("/mercadopago", async (req:Request, res:Response) => {
       await payment.save();
   }
 
-   const existingOrder = await Order.findOne({ mercadoPagoDetails:paymentId });
+   const existingOrder = await Order.findOne({ 'mercadoPagoDetails.payment_id': paymentId });
+   console.log("Buscando payment en BD:", MPpayment.external_reference)
+console.log("Payment encontrado:", payment)
+console.log("Estado MP:", MPpayment.status)
+console.log("Ya existe order?", existingOrder)
     if (MPpayment.status === "approved" && !existingOrder) {
       // Crear orden
 
