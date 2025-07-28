@@ -52,13 +52,13 @@ export class PaymentService {
           productos: data.items,
         },
         back_urls: {
-          success: `https://p75qsw2c-3000.brs.devtunnels.ms/payment/success`,
-          failure: `https://p75qsw2c-3000.brs.devtunnels.ms/payment/failure`,
-          pending: `https://p75qsw2c-3000.brs.devtunnels.ms/payment/pending`,
+          success: `https://front-end-ecommerce-chelitas.vercel.app/payment/success`,
+          failure: `https://front-end-ecommerce-chelitas.vercel.app/payment/failure`,
+          pending: `https://front-end-ecommerce-chelitas.vercel.app/pending`,
         },
         auto_return: "approved",
         external_reference: externalReference,
-        notification_url: `https://p75qsw2c-3000.brs.devtunnels.ms/webhooks/mercadopago`,
+        notification_url: `https://backend-ecommerce-xno4.onrender.com/webhooks/mercadopago`,
       };
 
 
