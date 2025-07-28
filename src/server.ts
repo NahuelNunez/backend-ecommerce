@@ -50,7 +50,7 @@ app.get('/api/session',(req,res) => {
     httpOnly:true,
     secure:true,
     maxAge:1000 * 60 * 60 * 24 * 7,
-    sameSite:'lax'
+    sameSite:'none'
   })
  }
  res.json({sessionId});
