@@ -26,6 +26,7 @@ interface CreatePaymentData {
     codigoPostal: String;
     telefono: String;
     email: String;
+  
   }
 }
 
@@ -88,6 +89,7 @@ export class PaymentService {
             codigoPostal: data.formdata.codigoPostal,
             telefono: data.formdata.telefono,
             email: data.formdata.email,
+          
           }
 
 

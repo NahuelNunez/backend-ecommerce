@@ -19,14 +19,26 @@ const PORT = 3000;
 dotenv.config();
 const app = express();
 
+
+const allowedOrigins = [
+  'http://localhost:5173', // desarrollo
+  'https://front-end-ecommerce-chelitas.vercel.app'
+]
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true)
+    } else {
+      return callback(new Error('No permitido por CORS'))
+    }
+  },
+  credentials: true
+}))
+
 app.use(express.json());
 
 app.use(cookieParser())
-
-app.use(cors({
-  origin:'http://localhost:5173',
-  credentials:true
-}))
 
 
 app.get('/api/session',(req,res) => {
@@ -45,7 +57,7 @@ app.get('/api/session',(req,res) => {
 })
 
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mercadopago-app')
+mongoose.connect(process.env.MONGO_URI || '')
 .then (() => console.log('✅ Conectado a MongoDB Atlas'))
 .catch((err) => console.error('❌ Error de conexión:', err))
 
