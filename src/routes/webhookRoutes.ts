@@ -72,7 +72,7 @@ console.log("Ya existe order?", existingOrder)
         telefono:payment.userData?.telefono,
         email:payment.userData?.email,
         montoTotal:payment.amount,
-        productos: payment.items,
+        productos: payment.userData?.productos,
         estado:"aprobado",
       });
 
@@ -91,7 +91,7 @@ console.log("Ya existe order?", existingOrder)
         telefono:payment.userData?.telefono,
         email:payment.userData?.email,
         montoTotal:payment.amount,
-        productos: payment.items,
+        productos: payment.userData?.productos,
         estado:"aprobado"
       });
       
