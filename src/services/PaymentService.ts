@@ -11,6 +11,12 @@ interface PaymentItem {
   currency_id?: string
 }
 
+interface productosPayment {
+    titulo: string
+    precio: number
+    cantidad: number
+    imagen: string
+}
 interface CreatePaymentData {
   items: PaymentItem[]
   userId?: string;
@@ -26,7 +32,8 @@ interface CreatePaymentData {
     codigoPostal: String;
     telefono: String;
     email: String;
-  
+    productos:productosPayment[]
+   
   }
 }
 
@@ -39,6 +46,14 @@ export class PaymentService {
 
   async createPaymentPreference(data: CreatePaymentData) {
     try {
+
+      const productosPayment = data.formdata.productos.map((producto,idx) => ({
+        id: `item-${idx+1}`,
+         titulo: producto.titulo,
+    precio: producto.precio,
+    cantidad: producto.cantidad,
+    imagen: producto.imagen,
+      }))
       const externalReference = uuidv4()
       const preferenceData = {
         items: data.items.map((item, idx) => ({
@@ -89,6 +104,7 @@ export class PaymentService {
             codigoPostal: data.formdata.codigoPostal,
             telefono: data.formdata.telefono,
             email: data.formdata.email,
+            productos:productosPayment
           
           }
 
@@ -125,6 +141,7 @@ export class PaymentService {
             codigoPostal: data.formdata.codigoPostal,
             telefono: data.formdata.telefono,
             email: data.formdata.email,
+            productos:productosPayment
           }
         })
 

@@ -55,6 +55,14 @@ const PaymentSchema = new Schema({
   codigoPostal: String,
   telefono: String,
   email: String,
+  productos:[{
+    idProducto:String,
+     titulo:String,
+    precio: Number,
+    cantidad: Number,
+    imagen: String,
+            
+  }]
     }
 }, {
     timestamps:true,
