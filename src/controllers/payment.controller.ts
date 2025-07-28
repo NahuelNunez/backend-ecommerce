@@ -175,14 +175,5 @@ export class PaymentController {
     }
   }
 
-  handlePending = async (req: Request, res: Response) => {
-    try {
-      const { external_reference } = req.query
 
-      res.redirect(`http://localhost:5173/payment/pending?ref=${external_reference}`)
-    } catch (error) {
-      console.error("Error in handlePending:", error)
-      res.redirect(`http://localhost:5173/payment/error`)
-    }
-  }
 }

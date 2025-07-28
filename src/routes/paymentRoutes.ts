@@ -19,6 +19,6 @@ router.get("/session", paymentController.getSessionPayments)
 // URLs de retorno
 router.get("/success", paymentController.handleSuccess)
 router.get("/failure", paymentController.handleFailure)
-router.get("/pending", paymentController.handlePending)
+
 
 export default router

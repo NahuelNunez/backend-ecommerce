@@ -52,9 +52,9 @@ export class PaymentService {
           productos: data.items,
         },
         back_urls: {
-          success: `https://front-end-ecommerce-chelitas.vercel.app/payment/success`,
-          failure: `https://front-end-ecommerce-chelitas.vercel.app/payment/failure`,
-          pending: `https://front-end-ecommerce-chelitas.vercel.app/pending`,
+          success: `https://backend-ecommerce-xno4.onrender.com/payment/success`,
+          failure: `https://backend-ecommerce-xno4.onrender.com/payment/failure`,
+         
         },
         auto_return: "approved",
         external_reference: externalReference,
