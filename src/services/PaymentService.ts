@@ -12,6 +12,7 @@ interface PaymentItem {
 }
 
 interface productosPayment {
+  idProducto:Number
     titulo: string
     precio: number
     cantidad: number
@@ -47,8 +48,8 @@ export class PaymentService {
   async createPaymentPreference(data: CreatePaymentData) {
     try {
 
-      const productosPayment = data.formdata.productos.map((producto,idx) => ({
-        id: `item-${idx+1}`,
+      const productosPayment = data.formdata.productos.map((producto) => ({
+        idProducto: producto.idProducto,
          titulo: producto.titulo,
     precio: producto.precio,
     cantidad: producto.cantidad,
