@@ -153,10 +153,10 @@ export class PaymentController {
       }
 
       // Redirigir al frontend
-      res.redirect(`http://localhost:5173/payment/success?ref=${external_reference}`)
+      res.redirect(`https://front-end-ecommerce-chelitas.vercel.app/payment/success?ref=${external_reference}`)
     } catch (error) {
       console.error("Error in handleSuccess:", error)
-      res.redirect(`http://localhost:5173/payment/error`)
+      res.redirect(`https://front-end-ecommerce-chelitas.vercel.app/payment/error`)
     }
   }
 
@@ -168,10 +168,10 @@ export class PaymentController {
         await this.paymentService.updatePaymentStatus(external_reference as string, "rejected")
       }
 
-      res.redirect(`http://localhost:5173/payment/failure?ref=${external_reference}`)
+      res.redirect(`https://front-end-ecommerce-chelitas.vercel.app/payment/failure?ref=${external_reference}`)
     } catch (error) {
       console.error("Error in handleFailure:", error)
-      res.redirect(`http://localhost:5173/payment/error`)
+      res.redirect(`https://front-end-ecommerce-chelitas.vercel.app/payment/error`)
     }
   }
 

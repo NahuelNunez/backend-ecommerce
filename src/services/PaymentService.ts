@@ -114,7 +114,7 @@ export class PaymentService {
           status: "pending",
          
           sessionId: data.sessionId,
-          items: preferenceData.items,
+          items: data.items,
           userData: {
             metodoPago: data.formdata.metodoPago,
             tipoEntrega: data.formdata.tipoEntrega,
