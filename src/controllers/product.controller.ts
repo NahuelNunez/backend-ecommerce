@@ -31,6 +31,8 @@ export const getById = async (req:Request,res:Response) => {
 
 export const Create = async(req:Request,res:Response) => {
 
+
+
     try {
 
   
@@ -40,6 +42,8 @@ export const Create = async(req:Request,res:Response) => {
     const {title,image,price,stock,category} = req.body
     const imagePath = req.file?.path;
 const cloudinaryId = req.file?.filename;
+
+console.log("BACKEND POST PRODUCT:",req.file)
     const count = await Product.countDocuments()
 
     const products = new Product ({
