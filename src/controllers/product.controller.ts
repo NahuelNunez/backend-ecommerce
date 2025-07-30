@@ -2,6 +2,7 @@
 import {Request,Response} from 'express'
 import {Product} from '../models/Product'
 import { createProductLog } from '../utils/logActionAdmin'
+import {v2 as cloudinary} from 'cloudinary'
 
 export const getAll = async (req:Request,res:Response) => {
     try {
@@ -37,8 +38,8 @@ export const Create = async(req:Request,res:Response) => {
   
 
     const {title,image,price,stock,category} = req.body
-    const imagePath = req.file?.filename;
-
+    const imagePath = req.file?.path;
+const cloudinaryId = req.file?.filename;
     const count = await Product.countDocuments()
 
     const products = new Product ({
@@ -46,6 +47,7 @@ export const Create = async(req:Request,res:Response) => {
         title,
         category,
         image:imagePath,
+        cloudinaryId,
         price,
         stock
     })
@@ -77,19 +79,31 @@ export const edit = async(req:Request,res:Response) => {
 
     const {id} = req.params
     const {title,price,stock,category} = req.body 
-    const image = req.file?.filename 
+   
      const products = await Product.findOne({id:id})
+
+if (req.file) {
+  if (products?.cloudinaryId) {
+    await cloudinary.uploader.destroy(products.cloudinaryId)
+  }
+ 
+  if(products) {
+    products.image = req.file.path;
+    products.cloudinaryId = req.file.filename;
+  }
+  
+}
+
+
 
       if(products) {
         products.title = title || products.title ,
         products.category = category || products.category ,
-        products.image = image || products.image ,
+       
         products.price = price || products.price ,
         products.stock = stock || products.stock 
 
-         if (image) {
-                products.image = `${image}`;
-            }
+        
 
         await products.save();
 
@@ -122,6 +136,9 @@ export const eliminate = async(req:Request, res:Response) => {
         if (!products) {
       res.status(404).json({error:'Producto no encontrado'})
          return;
+        }
+        if(products.cloudinaryId) {
+          await cloudinary.uploader.destroy(products.cloudinaryId);
         }
 
         if ((req as any).userId) {

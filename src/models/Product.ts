@@ -6,6 +6,7 @@ const productSchema = new Schema({
     title:{type:String , required:[true,"El titulo es obligatorio"]},
     image:{type:String,required:true},
     category:{type:String,required:true},
+    cloudinaryId:{type:String},
     price:{type:Number,required:[true,"El precio es obligatorio"],
         min:0
     },
