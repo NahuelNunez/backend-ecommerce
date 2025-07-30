@@ -50,6 +50,8 @@ export class PaymentService {
   async createPaymentPreference(data: CreatePaymentData) {
     try {
 
+      const shippingCost = data.shippingCost || 0
+
       const productosPayment = data.formdata.productos.map((producto) => ({
         idProducto: producto.idProducto,
          titulo: producto.titulo,
@@ -71,6 +73,7 @@ export class PaymentService {
           envio:data.shippingCost,
           
         },
+    
         back_urls: {
           success: `https://backend-ecommerce-xno4.onrender.com/payment/success`,
           failure: `https://backend-ecommerce-xno4.onrender.com/payment/failure`,
@@ -79,16 +82,19 @@ export class PaymentService {
         auto_return: "approved",
         external_reference: externalReference,
         notification_url: `https://backend-ecommerce-xno4.onrender.com/webhooks/mercadopago`,
+        
+        
       };
 
+    
 
       const response = await this.preference.create({ body: preferenceData })
 
 
       const totalAmount = data.items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0)
 
-       const shippingAmount = data.formdata.envio
-     const totalAmountandShipping = totalAmount + Number(shippingAmount)
+    
+     const totalAmountandShipping = totalAmount + shippingCost
 
 
       if (data.userId) {
