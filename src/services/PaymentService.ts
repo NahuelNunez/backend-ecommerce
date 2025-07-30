@@ -23,6 +23,7 @@ interface CreatePaymentData {
   userId?: string;
   userEmail:string;
   sessionId?: string;
+  shippingCost:number,
   formdata: {
     metodoPago: String;
     tipoEntrega: String;
@@ -67,6 +68,8 @@ export class PaymentService {
         })),
         metadata: {
           productos: data.items,
+          envio:data.shippingCost,
+          
         },
         back_urls: {
           success: `https://backend-ecommerce-xno4.onrender.com/payment/success`,

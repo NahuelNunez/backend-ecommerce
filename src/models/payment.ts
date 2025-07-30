@@ -35,6 +35,7 @@ const PaymentSchema = new Schema({
         type:String,
         default:null,
     },
+    shippingCost: Number,
     items:[
         {
             productId:String,
