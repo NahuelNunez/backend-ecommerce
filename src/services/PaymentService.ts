@@ -34,6 +34,7 @@ interface CreatePaymentData {
     telefono: String;
     email: String;
     productos:productosPayment[]
+    envio:number,
    
   }
 }
@@ -83,6 +84,9 @@ export class PaymentService {
 
       const totalAmount = data.items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0)
 
+       const shippingAmount = data.formdata.envio
+     const totalAmountandShipping = totalAmount + shippingAmount
+
 
       if (data.userId) {
 
@@ -90,7 +94,7 @@ export class PaymentService {
         const payment = new Payment({
           preferenceId: response.id!,
           externalReference,
-          amount: totalAmount,
+          amount: totalAmountandShipping,
           status: "pending",
           userId: data.userId,
           userEmail: data.userEmail,
@@ -118,7 +122,7 @@ export class PaymentService {
           initPoint: response.init_point,
           sandboxInitPoint: response.sandbox_init_point,
           externalReference,
-          amount: totalAmount,
+          amount: totalAmountandShipping,
         }
 
       } else {
@@ -127,7 +131,7 @@ export class PaymentService {
         const payment = new Payment({
           preferenceId: response.id!,
           externalReference,
-          amount: totalAmount,
+          amount: totalAmountandShipping,
           status: "pending",
          
           sessionId: data.sessionId,
@@ -153,7 +157,7 @@ export class PaymentService {
           initPoint: response.init_point,
           sandboxInitPoint: response.sandbox_init_point,
           externalReference,
-          amount: totalAmount,
+          amount: totalAmountandShipping,
         }
 
       }
