@@ -51,7 +51,22 @@ export class PaymentService {
     try {
       
       const shippingCost = Number(data.formdata.envio)
-    
+    const allItems = [
+  ...data.items.map((item, idx) => ({
+    id:`item-${idx+1}`,
+    title: item.title,
+    quantity: Number(item.quantity),
+    unit_price: Number(item.unit_price),
+    currency_id: "ARS"
+  })),
+  {
+    id:"envio",
+    title: "Costo de Envío",
+    quantity: 1,
+    unit_price: shippingCost,
+    currency_id: "ARS"
+  }
+];
 
       const productosPayment = data.formdata.productos.map((producto) => ({
         idProducto: producto.idProducto,
@@ -62,13 +77,7 @@ export class PaymentService {
       }))
       const externalReference = uuidv4()
       const preferenceData = {
-        items: data.items.map((item, idx) => ({
-          id: `item-${idx + 1}`,
-          title: item.title,
-          quantity: item.quantity,
-          unit_price: item.unit_price,
-          currency_id: "ARS",
-        })),
+        items: allItems,
         metadata: {
           productos: data.items,
           envio:shippingCost,
