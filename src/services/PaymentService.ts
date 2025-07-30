@@ -34,7 +34,7 @@ interface CreatePaymentData {
     telefono: String;
     email: String;
     productos:productosPayment[]
-    envio:number,
+    envio:String,
    
   }
 }

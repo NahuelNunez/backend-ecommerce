@@ -55,7 +55,7 @@ const PaymentSchema = new Schema({
   codigoPostal: String,
   telefono: String,
   email: String,
-  envio:Number,
+  envio:String,
   productos:[{
     idProducto:String,
      titulo:String,
