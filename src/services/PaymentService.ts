@@ -85,7 +85,7 @@ export class PaymentService {
       const totalAmount = data.items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0)
 
        const shippingAmount = data.formdata.envio
-     const totalAmountandShipping = totalAmount + shippingAmount
+     const totalAmountandShipping = totalAmount + Number(shippingAmount)
 
 
       if (data.userId) {
