@@ -10,7 +10,7 @@ export class PaymentController {
 
   createPayment = async (req: Request, res: Response) => {
     try {
-      const { items ,formdata , userEmail , userId , shippingCost} = req.body
+      const { items ,formdata , userEmail , userId } = req.body
       const sessionId = req.cookies.sessionId
    
 
@@ -56,7 +56,7 @@ export class PaymentController {
         userEmail,
         sessionId,
    formdata,
-   shippingCost
+   
       })
 
       res.status(201).json({

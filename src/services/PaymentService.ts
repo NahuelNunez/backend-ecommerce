@@ -23,7 +23,7 @@ interface CreatePaymentData {
   userId?: string;
   userEmail:string;
   sessionId?: string;
-  shippingCost:number,
+
   formdata: {
     metodoPago: String;
     tipoEntrega: String;
@@ -49,8 +49,9 @@ export class PaymentService {
 
   async createPaymentPreference(data: CreatePaymentData) {
     try {
-
-      const shippingCost = data.shippingCost || 0
+      
+      const shippingCost = Number(data.formdata.envio)
+    
 
       const productosPayment = data.formdata.productos.map((producto) => ({
         idProducto: producto.idProducto,
@@ -70,7 +71,7 @@ export class PaymentService {
         })),
         metadata: {
           productos: data.items,
-          envio:data.shippingCost,
+          envio:shippingCost,
           
         },
     
@@ -93,7 +94,6 @@ export class PaymentService {
 
       const totalAmount = data.items.reduce((sum, item) => sum + item.unit_price * item.quantity, 0)
 
-    
      const totalAmountandShipping = totalAmount + shippingCost
 
 
