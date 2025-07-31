@@ -83,7 +83,7 @@ export const edit = async(req:Request,res:Response) => {
 
     const {id} = req.params
     const {title,price,stock,category} = req.body 
-   
+    const  imagenUrl = req.file?.path
      const products = await Product.findOne({id:id})
 
 if (req.file) {
@@ -91,10 +91,7 @@ if (req.file) {
     await cloudinary.uploader.destroy(products.cloudinaryId)
   }
  
-  if(products) {
-    products.image = req.file.path;
-    products.cloudinaryId = req.file.filename;
-  }
+
   
 }
 
@@ -103,7 +100,7 @@ if (req.file) {
       if(products) {
         products.title = title || products.title ,
         products.category = category || products.category ,
-       
+        products.image = imagenUrl || products.image,
         products.price = price || products.price ,
         products.stock = stock || products.stock 
 
