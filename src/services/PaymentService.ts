@@ -79,7 +79,7 @@ export class PaymentService {
       const preferenceData = {
         items: allItems,
         metadata: {
-          productos: data.items,
+          items: data.items,
           envio:shippingCost,
           
         },
