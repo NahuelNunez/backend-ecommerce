@@ -5,6 +5,7 @@ import { mercadopagoClient } from "../config/mercadopago"
 import { bdPayment } from "../models/payment" 
 import { Order } from "../models/Order"
 import { sendOrderEmail } from "../utils/sendOrderEmail"
+import { Product } from "../models/Product"
 const router = Router()
 const paymentService = new PaymentService()
 
@@ -16,15 +17,9 @@ router.post("/mercadopago", async (req:Request, res:Response) => {
     console.log("Webhook received:", { type, data })
     
     const paymentId = data.id
-    // if (type === "payment") {
-      //   const paymentId = data.id
-      //   console.log(`Payment webhook received for payment ID: ${paymentId}`)
-      
-      
-      // }
+  
       const body: {data: {id: string}} = req.body;
 
-  // Obtenemos el pago
   const MPpayment = await new Payment(mercadopagoClient).get({id: body.data.id});
 
   
@@ -46,6 +41,19 @@ router.post("/mercadopago", async (req:Request, res:Response) => {
 console.log("Payment encontrado:", payment)
 console.log("Estado MP:", MPpayment.status)
 console.log("Ya existe order?", existingOrder)
+     if(MPpayment.status==="approved") {
+      const productos = MPpayment.metadata.productos;
+          
+     
+      for(const producto of productos) {
+       await Product.findOneAndUpdate({id:producto.id},{
+        $inc:{stock:-producto.quantity}
+       })
+      }
+     }
+    
+
+
     if (MPpayment.status === "approved" && !existingOrder) {
       // Crear orden
 
