@@ -61,7 +61,7 @@ export const sendOrderEmail = async (order: any) => {
                                 ${
                                   prod.imagen
                                     ? `
-                                  <img src="cid:product-img-${index}" width="80" height="80" style="border-radius: 8px; object-fit: cover; border: 2px solid #404040; display: block;" />
+                                  <img src="${prod.imagen}" width="80" height="80" style="border-radius: 8px; object-fit: cover; border: 2px solid #404040; display: block;" />
                                 `
                                     : `
                                   <div style="width: 80px; height: 80px; background: #404040; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888;">
@@ -167,51 +167,20 @@ export const sendOrderEmail = async (order: any) => {
     </table>
   `
 
-  // ✅ SOLUCIÓN: Crear attachments correctos para las imágenes de productos
-  const productImageAttachments = order.productos
-    .map((prod: any, index: number) => {
-      if (prod.imagen && prod.imagen.trim() !== "") {
-        // ✅ Usar directamente la carpeta uploads
-        const imagePath = path.resolve(`./uploads/${prod.imagen}`)
-        console.log(`Intentando adjuntar imagen: ${imagePath}`) // Debug
-        return {
-          filename: prod.imagen,
-          path: imagePath,
-          cid: `product-img-${index}`,
-        }
-      }
-      return null
-    })
-    .filter(Boolean)
 
-  console.log(`Total de imágenes de productos a adjuntar: ${productImageAttachments.length}`) // Debug
-
-  const allAttachments = [
-    // Comprobante de pago (si existe)
-    ...(order.comprobanteURL
-      ? [
-          {
-            filename: order.comprobanteURL,
-            path: path.resolve(`./uploads/${order.comprobanteURL}`),
-          },
-        ]
-      : []),
-    // Imágenes de productos
-    ...productImageAttachments,
-  ]
 
   const mailOptions = {
     from: `"Chelitas Joyas" <${userGMail}>`,
     to: order.email,
     subject: "✨ Confirmación de tu pedido - Chelitas Joyas",
     html: htmlResumen,
-    attachments: allAttachments,
+   
   }
 
   try {
     const info = await transporter.sendMail(mailOptions)
     console.log("Correo enviado: ", info.response)
-    console.log("Attachments enviados:", allAttachments.length)
+  
     return { success: true, info }
   } catch (error) {
     console.error("Error al enviar el correo:", error)
