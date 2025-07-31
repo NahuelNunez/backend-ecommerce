@@ -51,7 +51,7 @@ console.log("Ya existe order?", existingOrder)
     if (MPpayment.status === "approved" && !existingOrder) {
       
 
-  const productos = MPpayment.metadata.productos;
+  const productos = MPpayment.metadata.items;
             for(const producto of productos) {
        await Product.findOneAndUpdate({id:producto.id},{
         $inc:{stock:-producto.quantity}
