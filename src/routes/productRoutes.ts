@@ -9,7 +9,7 @@ router.get('/getAll/:id',productController.getById)
 
 router.post('/create',authenticateToken,upload.single('image'),productController.Create)
 
-router.put('/edite/:id',authenticateToken,upload.single('image'),productController.edit)
+router.patch('/edite/:id',authenticateToken,upload.single('image'),productController.edit)
 
 router.delete('/delete/:id',authenticateToken,productController.eliminate)
 

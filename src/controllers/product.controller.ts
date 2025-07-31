@@ -82,25 +82,31 @@ export const edit = async(req:Request,res:Response) => {
 
 
     const {id} = req.params
-    const {title,price,stock,category} = req.body 
-    const  imagenUrl = req.file?.path
+    const {title,price,stock,image,category} = req.body 
+     
+   
      const products = await Product.findOne({id:id})
 
-if (req.file) {
-  if (products?.cloudinaryId) {
-    await cloudinary.uploader.destroy(products.cloudinaryId)
-  }
+
  
 
-  
-}
+      if (req.file && products) {
+ 
+      if (products.cloudinaryId) {
+        await cloudinary.uploader.destroy(products.cloudinaryId);
+      }
+
+      products.image = req.file.path;
+      products.cloudinaryId = req.file.filename;
+    }
+
 
 
 
       if(products) {
         products.title = title || products.title ,
         products.category = category || products.category ,
-        products.image = imagenUrl || products.image,
+        products.image = req.file?.path || products.image,
         products.price = price || products.price ,
         products.stock = stock || products.stock 
 
