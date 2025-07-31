@@ -41,22 +41,24 @@ router.post("/mercadopago", async (req:Request, res:Response) => {
 console.log("Payment encontrado:", payment)
 console.log("Estado MP:", MPpayment.status)
 console.log("Ya existe order?", existingOrder)
-     if(MPpayment.status==="approved") {
-      const productos = MPpayment.metadata.productos;
+
+     
           
      
-      for(const producto of productos) {
-       await Product.findOneAndUpdate({id:producto.id},{
-        $inc:{stock:-producto.quantity}
-       })
-      }
-     }
     
 
 
     if (MPpayment.status === "approved" && !existingOrder) {
-      // Crear orden
+      
 
+  const productos = MPpayment.metadata.productos;
+            for(const producto of productos) {
+       await Product.findOneAndUpdate({id:producto.id},{
+        $inc:{stock:-producto.quantity}
+       })
+      }
+     
+    
       const  mercadoPagoDetails = {
         preferenceId: payment.preferenceId,
         externalReference: payment.externalReference,
@@ -64,6 +66,9 @@ console.log("Ya existe order?", existingOrder)
         status: payment.status, // Estado del pago en MP
         amount: payment.amount,
       }
+       
+
+
       const count = await Order.countDocuments()
       const newId = count + 1 
       if (payment.userId) {
@@ -107,7 +112,9 @@ console.log("Ya existe order?", existingOrder)
       await sendOrderEmail(newOrder);
     }
 
-    res.sendStatus(200);
+ 
+    
+     
   }
 
 
