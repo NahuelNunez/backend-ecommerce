@@ -12,17 +12,7 @@ console.log("API key:", process.env.CLOUDINARY_API_KEY);
 console.log("API secret:", process.env.CLOUDINARY_API_SECRET);
 
 
-const storage = new CloudinaryStorage({
-    cloudinary,
-    params: async(req, file) => ({
-    
-            folder:"uploads",
-            allowed_formats:["jpg", "jpeg", "png", "webp"],
-            public_id: `${Date.now()}-${file.originalname}`,
-        }),
-    });
 
- 
 
 export const cloudinaryConfig = async () => {
   try {
@@ -36,6 +26,21 @@ export const cloudinaryConfig = async () => {
     throw new Error("❌ It is not possible to connect to Cloudinary");
   }
 };
+
+
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: async(req, file) => ({
+    
+            folder:"uploads",
+            allowed_formats:["jpg", "jpeg", "png", "webp"],
+            public_id: `${Date.now()}-${file.originalname}`,
+        }),
+    });
+
+ 
+
+
 
 export const upload = multer({ storage });
 
