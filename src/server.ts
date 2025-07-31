@@ -9,7 +9,7 @@ import orderRoutes from './routes/orderRoutes'
 import categoryRoutes from './routes/categoryRoutes'
 import paymentRoutes from './routes/paymentRoutes'
 import webhookRoutes from './routes/webhookRoutes'
-
+import * as cloudinary from './middlewares/upload'
 
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
@@ -18,6 +18,8 @@ import cookieParser from 'cookie-parser'
 const PORT = 3000;
 dotenv.config();
 const app = express();
+
+cloudinary.cloudinaryConfig();
 
 
 const allowedOrigins = [
