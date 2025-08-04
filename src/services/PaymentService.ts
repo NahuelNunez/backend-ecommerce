@@ -68,13 +68,13 @@ export class PaymentService {
   }
 ];
 
-      const productosPayment = data.formdata.productos.map((producto) => ({
-        idProducto: producto.idProducto,
-         titulo: producto.titulo,
-    precio: producto.precio,
-    cantidad: producto.cantidad,
-    imagen: producto.imagen,
-      }))
+    //   const productosPayment = data.formdata.productos.map((producto) => ({
+    //     idProducto: producto.idProducto,
+    //      titulo: producto.titulo,
+    // precio: producto.precio,
+    // cantidad: producto.cantidad,
+    // imagen: producto.imagen,
+    //   }))
       const externalReference = uuidv4()
       const preferenceData = {
         items: allItems,
@@ -127,7 +127,7 @@ export class PaymentService {
             codigoPostal: data.formdata.codigoPostal,
             telefono: data.formdata.telefono,
             email: data.formdata.email,
-            productos:productosPayment
+            productos:data.formdata.productos
           
           }
 
@@ -164,7 +164,7 @@ export class PaymentService {
             codigoPostal: data.formdata.codigoPostal,
             telefono: data.formdata.telefono,
             email: data.formdata.email,
-            productos:productosPayment
+            productos:data.formdata.productos
           }
         })
 
