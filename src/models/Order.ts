@@ -22,6 +22,7 @@ const OrderSchema = new Schema({
   estado: { type: String, default: 'No realizada' },       
   fecha: { type: Date, default: Date.now },
   montoTotal:{type:Number, required:true},
+  envio:{type:Number},
   productos:[{
     idProducto:{type:Number,required:true},
     titulo:{type:String,required:true},

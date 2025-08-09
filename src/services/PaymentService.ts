@@ -127,7 +127,8 @@ export class PaymentService {
             codigoPostal: data.formdata.codigoPostal,
             telefono: data.formdata.telefono,
             email: data.formdata.email,
-            productos:productosPayment
+            productos:productosPayment,
+            envio:shippingCost,
           
           }
 
@@ -164,7 +165,8 @@ export class PaymentService {
             codigoPostal: data.formdata.codigoPostal,
             telefono: data.formdata.telefono,
             email: data.formdata.email,
-            productos:productosPayment
+            productos:productosPayment,
+            envio:shippingCost,
           }
         })
 
