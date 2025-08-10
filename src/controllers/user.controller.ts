@@ -35,11 +35,12 @@ export const create = async(req:Request,res:Response) => {
             return;
         }
         
+        const lastUser = await User.findOne().sort({ id: -1 }).lean();
+        const newId = lastUser ? lastUser.id + 1 : 1;
           const hashedPassword = await bcrypt.hash(password, 10);
-        const count = await User.countDocuments()
         const user = new User({
             
-            id:count + 1,
+            id:newId,
             nombre,
             apellido,
             email,

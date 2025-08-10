@@ -44,10 +44,11 @@ export const Create = async(req:Request,res:Response) => {
 const cloudinaryId = req.file?.filename;
 
 console.log("BACKEND POST PRODUCT:",req.file)
-    const count = await Product.countDocuments()
+   const lastProduct = await Product.findOne().sort({ id: -1 }).lean(); 
+const newId = lastProduct ? lastProduct.id + 1 : 1;
 
     const products = new Product ({
-        id: count + 1 ,
+        id: newId ,
         title,
         category,
         image:imagePath,

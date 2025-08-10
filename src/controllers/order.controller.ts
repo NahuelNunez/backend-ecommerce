@@ -82,8 +82,9 @@ export const Create = async (req: Request, res: Response) => {
     }
 
     // Generar el ID numérico autoincremental
-    const count = await Order.countDocuments()
-    const newId = count + 1
+    const lastOrder = await Order.findOne().sort({ id: -1 }).lean(); 
+const newId = lastOrder ? lastOrder.id + 1 : 1;
+    
 
     const newOrder = new Order({
       id: newId, // Tu ID numérico
