@@ -13,4 +13,7 @@ router.patch('/edite/:id',authenticateToken,upload.single('image'),productContro
 
 router.delete('/delete/:id',authenticateToken,productController.eliminate)
 
+router.patch('/inhabilitarProduct/:id',authenticateToken,productController.inhabilitarProduct)
+router.patch('/habilitarProduct/:id',authenticateToken,productController.habilitarProduct)
+
 export default router;

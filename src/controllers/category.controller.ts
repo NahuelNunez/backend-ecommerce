@@ -38,10 +38,11 @@ export const Create = async(req:Request,res:Response) => {
 try {
 
 const {category,estado} = req.body
-const count = await Category.countDocuments()
+   const lastCategory = await Category.findOne().sort({ id: -1 }).lean(); 
+const newId = lastCategory ? lastCategory.id + 1 : 1;
 
 const categories = new Category({
-    id: count + 1 ,
+    id: newId,
     category,
     estado
 })

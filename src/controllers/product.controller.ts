@@ -163,3 +163,35 @@ export const eliminate = async(req:Request, res:Response) => {
     }
 
 }
+
+export const inhabilitarProduct = async (req:Request, res:Response) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findOneAndUpdate({id}, { inhabilitado: true }, { new: true });
+    if (!product) {
+     res.status(404).json({ msg: 'Producto no encontrado' });
+    }
+
+    res.json({ msg: 'Producto inhabilitado', product });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error en el servidor' });
+  }
+};
+
+export const habilitarProduct = async (req:Request, res:Response) => {
+  const { id } = req.params;
+
+  try {
+    const  product = await Product.findOneAndUpdate({id}, { inhabilitado: false }, { new: true });
+    if (!product) {
+       res.status(404).json({ msg: 'Producto no encontrado' });
+    }
+
+    res.json({ msg: 'Producto habilitado', product });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error en el servidor' });
+  }
+};
