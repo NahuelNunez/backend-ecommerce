@@ -169,11 +169,17 @@ export const inhabilitarProduct = async (req:Request, res:Response) => {
 
   try {
     const product = await Product.findOneAndUpdate({id}, { inhabilitado: true }, { new: true });
-    if (!product) {
-     res.status(404).json({ msg: 'Producto no encontrado' });
-    }
 
+    if (!product) {
+      res.status(404).json({ msg: 'Producto no encontrado' });
+    }
+    if(product) {
+        if ((req as any).userId) {
+await createProductLog((req as any).userId, "UPDATE_PRODUCT", product.id, product.title)
+}
+    }
     res.json({ msg: 'Producto inhabilitado', product });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ msg: 'Error en el servidor' });
@@ -188,7 +194,11 @@ export const habilitarProduct = async (req:Request, res:Response) => {
     if (!product) {
        res.status(404).json({ msg: 'Producto no encontrado' });
     }
-
+    if(product) {
+        if ((req as any).userId) {
+await createProductLog((req as any).userId, "UPDATE_PRODUCT", product.id, product.title)
+}
+    }
     res.json({ msg: 'Producto habilitado', product });
   } catch (err) {
     console.error(err);
