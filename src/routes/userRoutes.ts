@@ -9,7 +9,7 @@ router.post('/create',userController.create)
 
 router.delete('/delete/:id',authenticateToken,userController.destroyer)
 
-router.put('/edit/:id',authenticateToken , userController.edit)
+router.patch('/edit/:id',authenticateToken , userController.edit)
 
 router.patch('/habilitarAdmin/:id',authenticateToken,userController.habilitarAdmin)
 
