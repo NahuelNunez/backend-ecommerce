@@ -60,11 +60,11 @@ const createLog = async (
         break
         case "ENABLE_PRODUCT":
           case "ENABLE_CATEGORY":
-            actionText = "desahibilito"
+            actionText = "habilito"
             break
         case "DISABLE_PRODUCT":
           case "DISABLE_CATEGORY":
-            actionText = "habilito"    
+            actionText = "deshabilito"    
             break
     }
 
