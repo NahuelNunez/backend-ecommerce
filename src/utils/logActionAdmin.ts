@@ -6,7 +6,7 @@ import { User } from "../models/User"
  */
 export const createProductLog = async (
   userId: number,
-  action: "CREATE_PRODUCT" | "UPDATE_PRODUCT" | "DELETE_PRODUCT",
+  action: "CREATE_PRODUCT" | "UPDATE_PRODUCT" | "DELETE_PRODUCT" | "ENABLE_PRODUCT" | "DISABLE_PRODUCT" ,
   productId: number,
   productTitle: string,
 ) => {
@@ -18,7 +18,7 @@ export const createProductLog = async (
  */
 export const createCategoryLog = async (
   userId: number,
-  action: "CREATE_CATEGORY" | "UPDATE_CATEGORY" | "DELETE_CATEGORY",
+  action: "CREATE_CATEGORY" | "UPDATE_CATEGORY" | "DELETE_CATEGORY" | "ENABLE_CATEGORY" | "DISABLE_CATEGORY",
   categoryId: number,
   categoryName: string,
 ) => {
@@ -58,6 +58,13 @@ const createLog = async (
       case "DELETE_CATEGORY":
         actionText = "eliminó"
         break
+        case "ENABLE_PRODUCT":
+          case "ENABLE_CATEGORY":
+            actionText = "desahibilito"
+            break
+        case "DISABLE_PRODUCT":
+          case "DISABLE_CATEGORY":
+            actionText = "habilito"    
     }
 
     const description = `${user.nombre} ${user.apellido} ${actionText} la ${resourceType} "${resourceName}"`

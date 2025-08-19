@@ -4,7 +4,7 @@ import { Schema,model } from "mongoose";
 const newCategories = new Schema({
     id:{type: Number , required : true},
     category: {type:String, required: true},
-    estado:{type:String,required:true}
+    estado:{type: Boolean,required:true , default:true}
 },{
     timestamps:true
 })

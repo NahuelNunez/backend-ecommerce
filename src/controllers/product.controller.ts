@@ -43,7 +43,7 @@ export const Create = async(req:Request,res:Response) => {
     const imagePath = req.file?.path;
 const cloudinaryId = req.file?.filename;
 
-console.log("BACKEND POST PRODUCT:",req.file)
+
    const lastProduct = await Product.findOne().sort({ id: -1 }).lean(); 
 const newId = lastProduct ? lastProduct.id + 1 : 1;
 
@@ -175,7 +175,7 @@ export const inhabilitarProduct = async (req:Request, res:Response) => {
     }
     if(product) {
         if ((req as any).userId) {
-await createProductLog((req as any).userId, "UPDATE_PRODUCT", product.id, product.title)
+await createProductLog((req as any).userId, "DISABLE_PRODUCT", product.id, product.title)
 }
     }
     res.json({ msg: 'Producto inhabilitado', product });
@@ -196,7 +196,7 @@ export const habilitarProduct = async (req:Request, res:Response) => {
     }
     if(product) {
         if ((req as any).userId) {
-await createProductLog((req as any).userId, "UPDATE_PRODUCT", product.id, product.title)
+await createProductLog((req as any).userId, "ENABLE_PRODUCT", product.id, product.title)
 }
     }
     res.json({ msg: 'Producto habilitado', product });

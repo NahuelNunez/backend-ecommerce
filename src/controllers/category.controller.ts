@@ -37,14 +37,14 @@ export const getById = async(req:Request,res:Response) => {
 export const Create = async(req:Request,res:Response) => {
 try {
 
-const {category,estado} = req.body
+const {category} = req.body
    const lastCategory = await Category.findOne().sort({ id: -1 }).lean(); 
 const newId = lastCategory ? lastCategory.id + 1 : 1;
 
 const categories = new Category({
     id: newId,
     category,
-    estado
+    
 })
 
 
@@ -118,3 +118,45 @@ export const eliminate = async(req:Request,res:Response) => {
 
     }
 }
+
+export const inhabilitarCategory = async (req:Request, res:Response) => {
+  const { id } = req.params;
+
+  try {
+    const categories = await Category.findOneAndUpdate({id}, { estado: false }, { new: true });
+
+    if (!categories) {
+      res.status(404).json({ msg: 'Categoria no encontrada' });
+    }
+    if(categories) {
+        if ((req as any).userId) {
+await createCategoryLog((req as any).userId, "DISABLE_CATEGORY", categories.id, categories.category)
+}
+    }
+    res.json({ msg: 'Categoria inhabilitada', categories });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error en el servidor' });
+  }
+};
+
+export const habilitarCategory = async (req:Request, res:Response) => {
+  const { id } = req.params;
+
+  try {
+    const  categories = await Category.findOneAndUpdate({id}, { estado: true }, { new: true });
+    if (!categories) {
+       res.status(404).json({ msg: 'Categoria no encontrada' });
+    }
+    if(categories) {
+        if ((req as any).userId) {
+await createCategoryLog((req as any).userId, "ENABLE_CATEGORY", categories.id, categories.category)
+}
+    }
+    res.json({ msg: 'Categoria habilitada', categories });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Error en el servidor' });
+  }
+};
