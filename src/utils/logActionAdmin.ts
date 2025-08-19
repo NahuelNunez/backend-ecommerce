@@ -6,7 +6,7 @@ import { User } from "../models/User"
  */
 export const createProductLog = async (
   userId: number,
-  action: "CREATE_PRODUCT" | "UPDATE_PRODUCT" | "DELETE_PRODUCT" | "ENABLE_PRODUCT" | "DISABLE_PRODUCT" ,
+  action: "CREATE_PRODUCT" | "UPDATE_PRODUCT" | "DELETE_PRODUCT" | "ENABLE_PRODUCT" | "DISABLE_PRODUCT",
   productId: number,
   productTitle: string,
 ) => {
@@ -65,6 +65,7 @@ const createLog = async (
         case "DISABLE_PRODUCT":
           case "DISABLE_CATEGORY":
             actionText = "habilito"    
+            break
     }
 
     const description = `${user.nombre} ${user.apellido} ${actionText} la ${resourceType} "${resourceName}"`
