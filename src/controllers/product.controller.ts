@@ -1,98 +1,77 @@
+import { Request, Response } from "express";
+import { Product } from "../models/Product";
+import { createProductLog } from "../utils/logActionAdmin";
+import { v2 as cloudinary } from "cloudinary";
 
-import {Request,Response} from 'express'
-import {Product} from '../models/Product'
-import { createProductLog } from '../utils/logActionAdmin'
-import {v2 as cloudinary} from 'cloudinary'
-
-export const getAll = async (req:Request,res:Response) => {
-    try {
-     
-        const products = await Product.find()
-        res.json(products)
-      } catch (error) {
-        console.error('Error al obtener los productos',error)
-        res.status(500).json({error:'Error al obtener los productos'})
-      }
-}
-
-export const getById = async (req:Request,res:Response) => {
+export const getAll = async (req: Request, res: Response) => {
   try {
-     const {id} = req.params
-
-     const products = await Product.findOne({id})
-
-     res.json(products)
-  } catch(error) { 
-    console.error('Error al obtener el producto',error)
-    res.status(500).json({error:'Error al obtener el producto'})
-
+    const products = await Product.find({ eliminado: false });
+    res.json(products);
+  } catch (error) {
+    console.error("Error al obtener los productos", error);
+    res.status(500).json({ error: "Error al obtener los productos" });
   }
-}
+};
 
-export const Create = async(req:Request,res:Response) => {
+export const getById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
 
+    const products = await Product.findOne({ id });
 
+    res.json(products);
+  } catch (error) {
+    console.error("Error al obtener el producto", error);
+    res.status(500).json({ error: "Error al obtener el producto" });
+  }
+};
 
-    try {
-
-  
-    
-  
-
-    const {title,image,price,stock,category} = req.body
+export const Create = async (req: Request, res: Response) => {
+  try {
+    const { title, image, price, stock, category } = req.body;
     const imagePath = req.file?.path;
-const cloudinaryId = req.file?.filename;
+    const cloudinaryId = req.file?.filename;
 
+    const lastProduct = await Product.findOne().sort({ id: -1 }).lean();
+    const newId = lastProduct ? lastProduct.id + 1 : 1;
 
-   const lastProduct = await Product.findOne().sort({ id: -1 }).lean(); 
-const newId = lastProduct ? lastProduct.id + 1 : 1;
+    const products = new Product({
+      id: newId,
+      title,
+      category,
+      image: imagePath,
+      cloudinaryId,
+      price,
+      stock,
+    });
 
-    const products = new Product ({
-        id: newId ,
-        title,
-        category,
-        image:imagePath,
-        cloudinaryId,
-        price,
-        stock
-    })
-  
-    await products.save()
-     if ((req as any).userId) {
-      await createProductLog((req as any).userId, "CREATE_PRODUCT", products.id, products.title)
+    await products.save();
+    if ((req as any).userId) {
+      await createProductLog(
+        (req as any).userId,
+        "CREATE_PRODUCT",
+        products.id,
+        products.title
+      );
     }
-    
-    res.status(201).json({message:'Producto creado exitosamente',productos:products })
 
+    res
+      .status(201)
+      .json({ message: "Producto creado exitosamente", productos: products });
+  } catch (error) {
+    console.error("Error al crear el producto", error);
+    res.status(500).json({ error: "Error al crear el producto" });
+  }
+};
 
+export const edit = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { title, price, stock, image, category } = req.body;
 
-    } catch (error ) {
-  console.error('Error al crear el producto',error)
-  res.status(500).json({error:'Error al crear el producto'})
+    const products = await Product.findOne({ id: id });
 
-    }
-}
-
-export const edit = async(req:Request,res:Response) => { 
- 
-
-    try{
-      
-    
-     
-
-
-    const {id} = req.params
-    const {title,price,stock,image,category} = req.body 
-     
-   
-     const products = await Product.findOne({id:id})
-
-
- 
-
-      if (req.file && products) {
- 
+    if (req.file && products) {
       if (products.cloudinaryId) {
         await cloudinary.uploader.destroy(products.cloudinaryId);
       }
@@ -101,107 +80,128 @@ export const edit = async(req:Request,res:Response) => {
       products.cloudinaryId = req.file.filename;
     }
 
+    if (products) {
+      (products.title = title || products.title),
+        (products.category = category || products.category),
+        (products.image = req.file?.path || products.image),
+        (products.price = price || products.price),
+        (products.stock = stock || products.stock);
 
+      await products.save();
 
-
-      if(products) {
-        products.title = title || products.title ,
-        products.category = category || products.category ,
-        products.image = req.file?.path || products.image,
-        products.price = price || products.price ,
-        products.stock = stock || products.stock 
-
-        
-
-        await products.save();
-
-        if ((req as any).userId) {
-      await createProductLog((req as any).userId, "UPDATE_PRODUCT", products.id, products.title)
-    }
-        res.status(201).json({message:'Producto editado correctamente',update:products})
-      } else { 
-        res.status(404).json({error: 'Producto no encontrado'})
+      if ((req as any).userId) {
+        await createProductLog(
+          (req as any).userId,
+          "UPDATE_PRODUCT",
+          products.id,
+          products.title
+        );
       }
-    } catch (error) {
-        console.error('Error al editar el producto',error)
-        res.status(500).json({error: 'Error al editar el producto'})
+      res
+        .status(201)
+        .json({ message: "Producto editado correctamente", update: products });
+    } else {
+      res.status(404).json({ error: "Producto no encontrado" });
     }
-
-
-}
-
-export const eliminate = async(req:Request, res:Response) => {
- 
-    try {
-   
-
-
-
-        const {id} = req.params
-        
-        const products = await Product.findOne({id:id})
- 
-        if (!products) {
-      res.status(404).json({error:'Producto no encontrado'})
-         return;
-        }
-        if(products.cloudinaryId) {
-          await cloudinary.uploader.destroy(products.cloudinaryId);
-        }
-
-        if ((req as any).userId) {
-      await createProductLog((req as any).userId, "DELETE_PRODUCT", products.id, products.title)
-    }
-
-       await Product.findOneAndDelete({ id: Number(id) })
-
-        res.status(200).json({message:'Producto eliminado exitosamente',producto:products})
-
-    } catch (error) {
-        console.error('Error al eliminar el producto',error)
-        res.status(500).json({error: 'Error al eliminar el producto'})
-    }
-
-}
-
-export const inhabilitarProduct = async (req:Request, res:Response) => {
-  const { id } = req.params;
-
-  try {
-    const product = await Product.findOneAndUpdate({id}, { inhabilitado: true }, { new: true });
-
-    if (!product) {
-      res.status(404).json({ msg: 'Producto no encontrado' });
-    }
-    if(product) {
-        if ((req as any).userId) {
-await createProductLog((req as any).userId, "DISABLE_PRODUCT", product.id, product.title)
-}
-    }
-    res.json({ msg: 'Producto inhabilitado', product });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: 'Error en el servidor' });
+  } catch (error) {
+    console.error("Error al editar el producto", error);
+    res.status(500).json({ error: "Error al editar el producto" });
   }
 };
 
-export const habilitarProduct = async (req:Request, res:Response) => {
+export const eliminate = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const products = await Product.findOne({ id: id });
+
+    if (!products) {
+      res.status(404).json({ error: "Producto no encontrado" });
+      return;
+    }
+    if (products.cloudinaryId) {
+      await cloudinary.uploader.destroy(products.cloudinaryId);
+    }
+
+    if ((req as any).userId) {
+      await createProductLog(
+        (req as any).userId,
+        "DELETE_PRODUCT",
+        products.id,
+        products.title
+      );
+    }
+
+    await Product.findOneAndUpdate(
+      { id: id },
+      { eliminado: true },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Producto eliminado exitosamente", producto: products });
+  } catch (error) {
+    console.error("Error al eliminar el producto", error);
+    res.status(500).json({ error: "Error al eliminar el producto" });
+  }
+};
+
+export const inhabilitarProduct = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const  product = await Product.findOneAndUpdate({id}, { inhabilitado: false }, { new: true });
+    const product = await Product.findOneAndUpdate(
+      { id },
+      { inhabilitado: true },
+      { new: true }
+    );
+
     if (!product) {
-       res.status(404).json({ msg: 'Producto no encontrado' });
+      res.status(404).json({ msg: "Producto no encontrado" });
     }
-    if(product) {
-        if ((req as any).userId) {
-await createProductLog((req as any).userId, "ENABLE_PRODUCT", product.id, product.title)
-}
+    if (product) {
+      if ((req as any).userId) {
+        await createProductLog(
+          (req as any).userId,
+          "DISABLE_PRODUCT",
+          product.id,
+          product.title
+        );
+      }
     }
-    res.json({ msg: 'Producto habilitado', product });
+    res.json({ msg: "Producto inhabilitado", product });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Error en el servidor' });
+    res.status(500).json({ msg: "Error en el servidor" });
+  }
+};
+
+export const habilitarProduct = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const product = await Product.findOneAndUpdate(
+      { id },
+      { inhabilitado: false },
+      { new: true }
+    );
+    if (!product) {
+      res.status(404).json({ msg: "Producto no encontrado" });
+    }
+    if (product) {
+      if ((req as any).userId) {
+        await createProductLog(
+          (req as any).userId,
+          "ENABLE_PRODUCT",
+          product.id,
+          product.title
+        );
+      }
+    }
+    res.json({ msg: "Producto habilitado", product });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: "Error en el servidor" });
   }
 };
