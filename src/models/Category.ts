@@ -1,19 +1,22 @@
-import { Schema,model } from "mongoose";
+import { Schema, model } from "mongoose";
 
+const newCategories = new Schema(
+  {
+    id: { type: Number, required: true },
+    category: { type: String, required: true },
+    estado: { type: Boolean, required: true, default: true },
+    eliminado: { type: Boolean, default: false },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const newCategories = new Schema({
-    id:{type: Number , required : true},
-    category: {type:String, required: true},
-    estado:{type: Boolean,required:true , default:true}
-},{
-    timestamps:true
-})
+newCategories.set("toJSON", {
+  transform: (doc, ret) => {
+    delete ret._id;
+    delete ret.__v;
+  },
+});
 
-newCategories.set('toJSON', {
-    transform: (doc, ret) => {
-      delete ret._id;
-      delete ret.__v;
-    }
-  });
-
-  export const Category = model('Category',newCategories)
+export const Category = model("Category", newCategories);
