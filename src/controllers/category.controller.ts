@@ -64,7 +64,7 @@ export const edit = async (req: Request, res: Response) => {
 
     if (categories) {
       (categories.category = category || categories.category),
-        (categories.estado = estado || categories.estado);
+        (categories.estado = estado ?? categories.estado);
 
       await categories.save();
       if ((req as any).userId) {
